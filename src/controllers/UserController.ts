@@ -1,17 +1,32 @@
 import { Request, Response } from "express";
 import { prismaClient } from "../database/prismaClient";
+import type { User } from "@prisma/client";
+import { Hash } from "../utils/bycript";
+
 
 export default new (class UserController {
   async createUser(req: Request, res: Response) {
     try {
-      const { name, email } = req.body;
-      const user = await prismaClient.user.create({
-        data: {
-          name,
-          email,
-        },
-      });
-      return res.json(user);
+      const {name,email, username, password }: User = req.body;
+      
+      const userExsist = await prismaClient.user.findUnique({where:{ email, username}})
+      
+      if(userExsist) {
+        return res.status(401).json({message: "Esse usuario já existe"})
+      } else {
+        
+        const user = await prismaClient.user.create({
+          data: {
+            username,
+            password: await Hash(password),
+            name,
+            email,
+          },
+        });
+  
+        return res.json(user);
+      }
+      
     } catch (e) {
       return res.status(400);
     }
@@ -38,14 +53,23 @@ export default new (class UserController {
   async updateUser(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const { name, email } = req.body;
+      
+      const {name , email, password, username }: User = req.body;
+
+      const hashedEmail = await Hash(email)
+      const hashedPassword = await Hash(password)
+
       const user = await prismaClient.user.update({
-        where: { id: Number(id) },
+        where: { id: Number(id)},
         data: {
           name,
-          email,
+          email: email,
+          password: hashedPassword,
+          username
         },
       });
+
+      return res.json(user)
     } catch (e) {
       return res.status(400);
     }
