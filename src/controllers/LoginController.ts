@@ -5,7 +5,7 @@ import { VerifyHash } from "../utils/bycript";
 import bycript from "bcrypt";
 import jwt from "jsonwebtoken";
 
-class TokenController {
+class LoginController {
   async store(req: Request, res: Response) {
     const { email, password }: User = req.body;
 
@@ -31,10 +31,10 @@ class TokenController {
     const { id } = user;
     const secret = process.env.TOKEN_SECRET as string;
     const token = jwt.sign({ id, email }, secret, {
-      expiresIn: process.env.TOKEN_EXP,
+      expiresIn: Math.floor(Date.now() / 1000) + 60 * 60, // 1 Hour
     });
     return res.json({ token: token });
   }
 }
 
-export default new TokenController().store;
+export default new LoginController().store;
