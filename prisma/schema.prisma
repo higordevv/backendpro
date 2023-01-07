@@ -18,14 +18,18 @@ model User {
   createdAt DateTime @default(now())
   name      String
   posts     Post[]
+  updateAt  DateTime
+  profile   Bytes
 }
 
 model Post {
   id          Int      @id @default(autoincrement())
   title       String
   content     String
+  media       Bytes
   published   Boolean  @default(false)
   authorId    Int?
   publishedAt DateTime @default(now())
+  updateAt    DateTime
   author      User?    @relation(fields: [authorId], references: [id])
 }

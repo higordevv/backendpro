@@ -33,7 +33,7 @@ class LoginController {
     const token = jwt.sign({ id, email }, secret, {
       expiresIn: Math.floor(Date.now() / 1000) + 60 * 60, // 1 Hour
     });
-    return res.json({ token: token });
+    return res.json({ token: token, user: user });
   }
 }
 

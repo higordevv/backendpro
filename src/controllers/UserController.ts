@@ -3,9 +3,10 @@ import { prismaClient } from "../database/prismaClient";
 import type { User } from "@prisma/client";
 import { Hash } from "../utils/bycript";
 import { decode } from "jsonwebtoken";
+import { ExtractJwt } from "../utils/extractToken";
 
 export default new (class UserController {
-  async createUser(req: Request, res: Response) {
+  async createUser(req: Request<User>, res: Response) {
     try {
       const { name, email, username, password }: User = req.body;
 
@@ -26,11 +27,11 @@ export default new (class UserController {
           username,
           password: await Hash(password),
           name,
-          email,
+          email: await Hash(email),
         },
       });
 
-      return res.json(user);
+      return res.status(200).json(user);
     } catch (e) {
       return res.status(400);
     }
@@ -38,8 +39,7 @@ export default new (class UserController {
 
   async findUser(req: Request, res: Response) {
     try {
-      const authorization = req.headers["authorization"] as string;
-      const token = authorization?.split(" ")[1];
+      const token = ExtractJwt(req);
       if (!token) return res.status(401);
       const { id } = decode(token) as any;
       const user = await prismaClient.user.findUnique({
@@ -53,8 +53,7 @@ export default new (class UserController {
   }
   async updateUser(req: Request, res: Response) {
     try {
-      const authorization = req.headers["authorization"] as string;
-      const token = authorization?.split(" ")[1];
+      const token = ExtractJwt(req);
       if (!token) return res.status(401);
       const { id } = decode(token) as any;
       const { name, email, password, username }: User = req.body;
@@ -79,14 +78,13 @@ export default new (class UserController {
   }
   async deleteUser(req: Request, res: Response) {
     try {
-      const authorization = req.headers["authorization"] as string;
-      const token = authorization?.split(" ")[1];
+      const token = ExtractJwt(req);
       if (!token) return res.status(401);
       const { id } = decode(token) as any;
       const userDeletd = await prismaClient.user.delete({
         where: { id: Number(id) },
       });
-      console.log(userDeletd);
+      res.clearCookie("token");
       return res.json({ message: "Conta deletada com sucesso" });
     } catch (e) {
       return res.status(400);

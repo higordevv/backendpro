@@ -17,7 +17,7 @@ class App {
   }
   routes() {
     this.app.use("/login", token);
-    this.app.use("/user/", User);
+    this.app.use("/user", User);
   }
 }
 

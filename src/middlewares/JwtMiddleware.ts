@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import jwt  from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import type { User } from "@prisma/client";
 const secret = process.env.TOKEN_SECRET as string;
 
@@ -11,7 +11,7 @@ class VerifyJwt {
   }
 
   public handler = async (
-    req: Request<User>,
+    req: Request<User | any>,
     res: Response,
     next: NextFunction
   ) => {

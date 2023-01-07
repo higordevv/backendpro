@@ -1,5 +1,5 @@
 import JwtMiddleware from "../middlewares/JwtMiddleware";
-import { Router } from "express";
+import { Router, Request, Response } from "express";
 
 import UserController from "../controllers/UserController";
 

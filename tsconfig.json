@@ -10,13 +10,8 @@
     "noImplicitAny": false,
     "strictNullChecks": true,
     "strictBindCallApply": false,
-    "forceConsistentCasingInFileNames": false,
-    "paths": {
-      "@src/*" : ["./src/*"]
-    }
+    "forceConsistentCasingInFileNames": false
   },
 
-  "include": [
-    "./src"
-  ]
+  "include": ["./src"]
 }
