@@ -22,12 +22,15 @@ export default new (class UserController {
       if (userExsist)
         return res.status(401).json({ message: "User já cadastrado" });
 
+
+      const hashedPassWord = await Hash(password)  
       const user = await prismaClient.user.create({
         data: {
           username,
-          password: await Hash(password),
+          updateAt: new Date(),
+          password: hashedPassWord,
           name,
-          email: await Hash(email),
+          email,
         },
       });
 

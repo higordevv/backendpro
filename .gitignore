@@ -1,5 +1,8 @@
 node_modules
 # Keep environment variables out of version control
 .env
-yarn.lock 
-package-lock.json
+*.lock 
+*package-lock.json
+*.db 
+*.sql
+*.toml

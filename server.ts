@@ -6,4 +6,5 @@ app.listen(PORT, () => {
   console.log();
   console.log(`Escutando na porta ${PORT}`);
   console.log(`Use a URL: http://localhost:${PORT}`);
+  console.log(`Sim, estou ONLINE`);
 });

@@ -8,6 +8,7 @@ generator client {
 datasource db {
   provider = "sqlite"
   url      = "file:./dev.db"
+
 }
 
 model User {
@@ -18,8 +19,7 @@ model User {
   createdAt DateTime @default(now())
   name      String
   posts     Post[]
-  updateAt  DateTime
-  profile   Bytes
+  updateAt  DateTime @default(now())
 }
 
 model Post {
