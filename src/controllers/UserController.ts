@@ -23,12 +23,12 @@ export default new (class UserController {
         return res.status(401).json({ message: "User já cadastrado" });
 
 
-      const hashedPassWord = await Hash(password)  
+  
       const user = await prismaClient.user.create({
         data: {
           username,
           updateAt: new Date(),
-          password: hashedPassWord,
+          password: await Hash(password),
           name,
           email,
         },
@@ -61,14 +61,13 @@ export default new (class UserController {
       const { id } = decode(token) as any;
       const { name, email, password, username }: User = req.body;
 
-      const hashedEmail = await Hash(email);
       const hashedPassword = await Hash(password);
 
       const user = await prismaClient.user.update({
         where: { id: Number(id) },
         data: {
           name,
-          email: hashedEmail,
+          email,
           password: hashedPassword,
           username,
         },

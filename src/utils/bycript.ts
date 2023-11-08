@@ -7,3 +7,4 @@ export async function Hash(data: string) {
 export async function VerifyHash(data: string, hash: string): Promise<boolean> {
   return bycript.compareSync(data, hash);
 }
+
